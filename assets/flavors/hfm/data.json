@@ -1,0 +1,28 @@
+{
+    "active" : true,
+    "stationNumber" : "01858464666",
+    "hasMultiStation" : false,
+    "backgroundColor" : "#FFFFFF",
+    "foregroundColor" : "#333333",
+    
+    "barColor" : "#942A2B",
+    "barIconColor" : "#F8F1F1",
+    
+    "podcastURLNOTSET" : "http://themissionhq.libsyn.com/rss",
+    "about" : "<p>Hfm is the truly local radio station for Market Harborough, South Leicestershire and North Northants.</p><p>We play great music and provide essential local news and community information.</p><p>Hfm is Proud To Be local!</p>",
+    "sponsor" : {
+        "logo" : "https://ids.infonote.com/RadioService/radioapps/HFMApp/sponsor1.jpg",
+        "website" : "https://www.spectrum-health.co.uk/",
+        "name" : "Spectrum Health",
+        "title" : "Accepting new NHS patients..."
+    },
+    "streams" : [
+        {
+            "streamURL" : "https://listen-harboroughfm.sharp-stream.com/harboroughfm.mp3",
+            "streamURLold" : "http://tx.sharp-stream.com/icecast.php?i=harboroughfm.mp3",
+            "twitterURL" : "hfmnews",
+            "stationName" : "HFM",
+            "email" : "studio@harboroughfm.co.uk"
+        }
+    ]
+}

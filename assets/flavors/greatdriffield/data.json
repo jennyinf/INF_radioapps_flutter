@@ -1,0 +1,22 @@
+{
+    "active" : true,
+    "stationNumber" : "01377828121",
+    "hasMultiStation" : false,
+    "backgroundColor" : "#ffffff",
+    "foregroundColor" : "#4A7A62",
+    
+    "barColor" : "#41B468",
+    "barIconColor" : "#F1F1F1",
+    "about" : "<p>Real local radio for Great Driffield and the surrounding villages in the East Riding.</p>",
+    
+    "streams" : [
+        {
+            "streamURLOld" : "http://streaming01.zfast.co.uk:8054/stream",
+            "streamURL" : "https://my.superstreaming.co.uk/8066/greatdriffield",
+            "twitterURL" : "greatdriffradio",
+            "stationName" : "Great Driffield Radio",
+            "email" : "info@greatdriffieldradio.co.uk"
+        }
+    ]
+}
+

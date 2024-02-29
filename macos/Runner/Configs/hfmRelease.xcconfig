@@ -1,0 +1,7 @@
+#include "../../Flutter/hfmRelease.xcconfig"
+#include "Warnings.xcconfig"
+
+FLUTTER_TARGET=lib/main_hfm.dart
+ASSET_PREFIX=hfm
+BUNDLE_NAME=HFM
+BUNDLE_DISPLAY_NAME=HFM

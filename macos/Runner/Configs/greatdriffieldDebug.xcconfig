@@ -1,0 +1,7 @@
+#include "../../Flutter/greatdriffieldDebug.xcconfig"
+#include "Warnings.xcconfig"
+
+FLUTTER_TARGET=lib/main_greatdriffield.dart
+ASSET_PREFIX=greatdriffield
+BUNDLE_NAME=Great Driffield
+BUNDLE_DISPLAY_NAME=Great Driffield

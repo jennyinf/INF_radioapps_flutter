@@ -1,0 +1,29 @@
+ide: "vscode"
+
+flavors:
+
+
+  hfm:
+    app:
+      name: "HFM"
+      icon: "assets/flavors/hfm/icon.png"
+
+    android:
+      applicationId: "com.infonote.HFM"  
+    ios:
+      bundleId: "com.infonote.HFM"
+    macos:
+      bundleId: "com.infonote.HFM"  
+
+  greatdriffield:
+    app:
+      name: "Great Driffield"
+      icon: "assets/flavors/greatdriffield/icon.png"
+
+    android:
+      applicationId: "com.infonote.greatdriffield"  
+    ios:
+      bundleId: "com.infonote.greatdriffield"
+    macos:
+      bundleId: "com.infonote.greatdriffield"  
+
