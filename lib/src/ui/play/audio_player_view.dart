@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:radioapps/flavors.dart';
+import 'package:radioapps/flavors_extensions.dart';
 import 'package:radioapps/src/ui/play/common.dart';
-import 'package:rxdart/rxdart.dart';
 
 class AudioPlayerView extends StatefulWidget {
   const AudioPlayerView({Key? key}) : super(key: key);
@@ -71,6 +72,7 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
                     final url = metadata?.info?.url;
                     return Column(
                       children: [
+                        if(F.appFlavor != null) F.appFlavor!.logo(context),
                         if (url != null) Image.network(url),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),

@@ -38,3 +38,9 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+    - path: "assets/flavors/hfm"
+      flavors:
+        - hfm
+    - path: "assets/flavors/greatdriffield"
+      flavors:
+        - greatdriffield

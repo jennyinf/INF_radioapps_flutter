@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/material.dart';
 import 'package:radioapps/flavors.dart';
 
 /// Add flavor extensions here
@@ -10,5 +11,7 @@ extension FlavorExtensions on Flavor {
   // all assets folders are going to be imported here.  This may get unwieldy and I might need to extend 
   // flutter_flavorizr to cleanout unused assets
   String get assetsFolder => "assets/flavors/$name";
+
+  Image logo(BuildContext context) => Image.asset("$assetsFolder/icon.png");
 
 }
