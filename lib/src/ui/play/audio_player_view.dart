@@ -1,15 +1,14 @@
 
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:radioapps/flavors.dart';
-import 'package:radioapps/flavors_extensions.dart';
+import 'package:radioapps/src/bloc/app_state.dart';
 import 'package:radioapps/src/ui/play/common.dart';
 
 class AudioPlayerView extends StatefulWidget {
-  const AudioPlayerView({Key? key}) : super(key: key);
+  const AudioPlayerView({super.key});
 
   @override
   AudioPlayerViewState createState() => AudioPlayerViewState();
@@ -17,24 +16,38 @@ class AudioPlayerView extends StatefulWidget {
 
 class AudioPlayerViewState extends State<AudioPlayerView> {
   late AudioPlayer _player;
-  final _playlist = AudioSource.uri(
-          Uri.parse("https://listen-harboroughfm.sharp-stream.com/harboroughfm.mp3"),
-          tag: MediaItem(id: '1', title: 'HFM')
-          );
+
+  String _streamUri = "";
+
+  late UriAudioSource _playlist;
 
   @override
   void initState() {
     super.initState();
     _player = AudioPlayer();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.black,
-    ));
-    _init();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) { 
+
+      final initialState = context.read<AppStateCubit>();
+      _updateState(initialState.state);
+    });
+  }
+
+  void _updateState( AppState state ) {
+    if(state.streamUri.isNotEmpty && state.streamUri != _streamUri) {
+      setState(() {
+        _streamUri = state.streamUri;
+        _playlist = AudioSource.uri(Uri.parse(_streamUri), 
+                  tag: MediaItem(id: '1', title: state.radioConfiguration.streams[0].stationName)
+);
+        _init();
+      });
+    }
   }
 
   Future<void> _init() async {
     final session = await AudioSession.instance;
-    await session.configure(const AudioSessionConfiguration.speech());
+    await session.configure(const AudioSessionConfiguration.music());
     // Listen to errors during playback.
     _player.playbackEventStream.listen((event) {},
         onError: (Object e, StackTrace stackTrace) {
@@ -58,6 +71,19 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
 
   @override
   Widget build(BuildContext context) {
+    
+  return BlocConsumer<AppStateCubit, AppState>(
+    bloc: context.read<AppStateCubit>(),
+    builder: (context, state) {
+      return screen(context);
+    },
+    listener: (previous, current) async {
+      _updateState(current);
+    },
+  );
+  }
+
+  Widget screen(BuildContext context) {
     return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +98,6 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
                     final url = metadata?.info?.url;
                     return Column(
                       children: [
-                        if(F.appFlavor != null) F.appFlavor!.logo(context),
                         if (url != null) Image.network(url),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
@@ -91,7 +116,7 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
 class ControlButtons extends StatelessWidget {
   final AudioPlayer player;
 
-  const ControlButtons(this.player, {Key? key}) : super(key: key);
+  const ControlButtons(this.player, {super.key});
 
   @override
   Widget build(BuildContext context) {

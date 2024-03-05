@@ -12,6 +12,8 @@ extension FlavorExtensions on Flavor {
   // flutter_flavorizr to cleanout unused assets
   String get assetsFolder => "assets/flavors/$name";
 
-  Image logo(BuildContext context) => Image.asset("$assetsFolder/icon.png");
+  Image logo({BoxFit fit = BoxFit.scaleDown}) => Image.asset("$assetsFolder/icon.png", fit: fit,);
+
+  String get dataFile => "$assetsFolder/data.json";
 
 }

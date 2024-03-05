@@ -12,11 +12,12 @@
     "streams" : [
         {
             "streamURLOld" : "http://streaming01.zfast.co.uk:8054/stream",
-            "streamURL" : "https://my.superstreaming.co.uk/8066/greatdriffield",
+            "streamURL" : "https://stream1.superstreaming.co.uk/proxy/greatdriffield/stream",
             "twitterURL" : "greatdriffradio",
+            "facebookPage" : "GreatDriffieldRadio",
+
             "stationName" : "Great Driffield Radio",
             "email" : "info@greatdriffieldradio.co.uk"
         }
     ]
 }
-
