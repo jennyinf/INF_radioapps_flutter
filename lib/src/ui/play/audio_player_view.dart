@@ -14,17 +14,85 @@ class AudioPlayerView extends StatefulWidget {
   AudioPlayerViewState createState() => AudioPlayerViewState();
 }
 
-class AudioPlayerViewState extends State<AudioPlayerView> {
+class AudioState {
+  /// this is the currently set uri
+  final String streamUri;
+  final String title;
+
+  AudioState({this.streamUri = "", this.title = ""});
+
+  AudioState copyWith({
+    String? streamUri,
+    String? title,
+  }) {
+    return AudioState(
+      streamUri: streamUri ?? this.streamUri,
+      title: title ?? this.title,
+    );
+  }
+}
+
+class AudioCubit extends Cubit<AudioState> {
   late AudioPlayer _player;
 
-  String _streamUri = "";
+  AudioPlayer get player => _player;
 
-  late UriAudioSource _playlist;
+  AudioCubit({int index = -1, required AudioState initialState}) 
+                          : super(initialState) {
+    _player = AudioPlayer();
+  }
+
+  void initialise() async {
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration.music());
+
+    // Listen to errors during playback.
+    _player.playbackEventStream.listen((event) {},
+        onError: (Object e, StackTrace stackTrace) {
+      print('A stream error occurred: $e');
+    });
+
+  }
+
+  void updateStream(String stream, String title) async {
+    if( stream != state.streamUri ) {
+      // update the stream
+      emit(state.copyWith(streamUri: stream, title: title));
+
+      if(stream.isEmpty) {
+        // stop playing
+      } else {
+        final source = AudioSource.uri(Uri.parse(stream), 
+          tag: MediaItem(id: '1', title: title));
+
+        try {
+          await _player.setAudioSource(source);
+        } catch (e, stackTrace) {
+          // Catch load errors: 404, invalid url ...
+          print("Error loading source: $e");
+          print(stackTrace);
+        }
+        
+
+      }
+
+    }
+  }
+
+
+}
+
+class AudioPlayerViewState extends State<AudioPlayerView> {
+  // late AudioPlayer _player;
+
+  // String _streamUri = "";
+
+  // late UriAudioSource _playlist;
 
   @override
   void initState() {
     super.initState();
-    _player = AudioPlayer();
+    // _player = AudioPlayer();
 
     WidgetsBinding.instance.addPostFrameCallback((_) { 
 
@@ -34,39 +102,44 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
   }
 
   void _updateState( AppState state ) {
-    if(state.streamUri.isNotEmpty && state.streamUri != _streamUri) {
-      setState(() {
-        _streamUri = state.streamUri;
-        _playlist = AudioSource.uri(Uri.parse(_streamUri), 
-                  tag: MediaItem(id: '1', title: state.radioConfiguration.streams[0].stationName)
-);
-        _init();
-      });
-    }
+    final audioState = context.read<AudioCubit>();
+
+    // TODO: multi stream
+    audioState.updateStream(state.streamUri, state.streamTitle);
+
+//     if(state.streamUri.isNotEmpty && state.streamUri != _streamUri) {
+//       setState(() {
+//         _streamUri = state.streamUri;
+//         _playlist = AudioSource.uri(Uri.parse(_streamUri), 
+//                   tag: MediaItem(id: '1', title: state.radioConfiguration.streams[0].stationName)
+// );
+//         _init();
+//       });
+//     }
   }
 
   Future<void> _init() async {
-    final session = await AudioSession.instance;
-    await session.configure(const AudioSessionConfiguration.music());
-    // Listen to errors during playback.
-    _player.playbackEventStream.listen((event) {},
-        onError: (Object e, StackTrace stackTrace) {
-      print('A stream error occurred: $e');
-    });
-    try {
-      await _player.setAudioSource(_playlist);
-    } catch (e, stackTrace) {
-      // Catch load errors: 404, invalid url ...
-      print("Error loading playlist: $e");
-      print(stackTrace);
-    }
+    // final session = await AudioSession.instance;
+    // await session.configure(const AudioSessionConfiguration.music());
+    // // Listen to errors during playback.
+    // _player.playbackEventStream.listen((event) {},
+    //     onError: (Object e, StackTrace stackTrace) {
+    //   print('A stream error occurred: $e');
+    // });
+    // try {
+    //   await _player.setAudioSource(_playlist);
+    // } catch (e, stackTrace) {
+    //   // Catch load errors: 404, invalid url ...
+    //   print("Error loading playlist: $e");
+    //   print(stackTrace);
+    // }
   }
 
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _player.dispose();
+  //   super.dispose();
+  // }
 
 
   @override
@@ -84,14 +157,19 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
   }
 
   Widget screen(BuildContext context) {
+
+    final audioCubit = context.read<AudioCubit>();
+
+    final player = audioCubit.player;
+
     return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               
-              ControlButtons(_player),
+              ControlButtons(audioCubit.player),
               const SizedBox(height: 8.0),
-              StreamBuilder(stream: _player.icyMetadataStream, 
+              StreamBuilder(stream: player.icyMetadataStream, 
                     builder: (context,snapshot) {
                                           final metadata = snapshot.data;
                     final title = metadata?.info?.title ?? '';

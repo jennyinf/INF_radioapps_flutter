@@ -6,6 +6,7 @@ import 'package:radioapps/flavors.dart';
 import 'package:radioapps/flavors_extensions.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
 import 'package:radioapps/src/ui/pages/radioapp_page.dart';
+import 'package:radioapps/src/ui/play/audio_player_view.dart';
 import 'package:radioapps/src/ui/style/app_theme.dart';
 
 import '../sample_feature/sample_item_details_view.dart';
@@ -91,6 +92,7 @@ class AppStateProvider extends StatefulWidget {
 class _AppStateProviderState extends State<AppStateProvider> {
 
   late AppStateCubit stateCubit;
+  late AudioCubit audioCubit;
 
 @override
 void initState() {
@@ -103,6 +105,8 @@ void initState() {
     stateCubit = AppStateCubit(initialState: initialState);
     stateCubit.initialise();
 
+    audioCubit = AudioCubit(initialState: AudioState());
+    audioCubit.initialise();
   });
 }
 
@@ -115,6 +119,9 @@ void initState() {
       providers: [
         BlocProvider(
           create: (context) => stateCubit,
+        ),
+        BlocProvider(
+          create: (context) => audioCubit,
         ),
       ],
       child: widget.child,

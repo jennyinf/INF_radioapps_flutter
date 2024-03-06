@@ -22,6 +22,7 @@ class AppState {
   int get selectedStream => 0; // todo - update the channel;
 
   String get streamUri => radioConfiguration.streams.isEmpty ? "" : radioConfiguration.streams[selectedStream].streamURL;
+  String get streamTitle => radioConfiguration.streams.isEmpty ? "" : radioConfiguration.streams[selectedStream].stationName;
 
   AppState copyWith({
     User? user,
