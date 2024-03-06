@@ -17,15 +17,6 @@ class _NewsPageState extends State<NewsPage> {
 
   void _setupWebPage(AppState state) {
 
-  const wc = '''
-      <head>
-      <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'>
-      </head>         
-      <div id="fb-root"></div>
-      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v17.0" nonce="H8gBXmJ4"></script>
-      <div class="fb-page" data-href="https://www.facebook.com/harboroughfm" data-tabs="timeline" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/harboroughfm" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/harboroughfm">Harborough FM</a></blockquote></div>
-                 ''';
-
     const webContent = """
                   <head>
                   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'>
@@ -71,7 +62,11 @@ class _NewsPageState extends State<NewsPage> {
               onPageFinished: (String url) {},
               onWebResourceError: (WebResourceError error) {},
               onNavigationRequest: (NavigationRequest request) {
-                return NavigationDecision.navigate;
+                if( request.url.startsWith("https://www.infonote.com/") || 
+                    request.url.contains("www.facebook.com")) {
+                  return NavigationDecision.navigate;
+                }
+                return NavigationDecision.prevent;
               },
             ),
           )

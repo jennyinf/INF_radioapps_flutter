@@ -2,5 +2,24 @@
   "appTitle": "radioapps",
   "@appTitle": {
     "description": "The title of the application"
-  }
+  },
+
+  "save" : "Save",
+
+  "tab_contact" : "Contact",
+  "tab_news" : "News",
+  "tab_listen" : "Listen",
+  "tab_settings" : "Settings",
+
+
+  "settings_privacy" : "Privacy",
+  "settings_privacy_statement" : "Your details are stored on your phone and only sent to us when you make a request to the radio station.  As soon as the request has been submitted via email to the radio station your name and number will be deleted.",
+
+  "settings_contact_section" : "Contact Details",
+  "settings_name_field" : "Name",
+  "settings_nickname_field" : "Nickname",
+  "settings_phone_field" : "Phone Number"
+
+
+
 }

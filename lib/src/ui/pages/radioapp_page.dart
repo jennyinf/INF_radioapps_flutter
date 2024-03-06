@@ -1,4 +1,5 @@
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
 import 'package:radioapps/src/ui/components/custom_tab_bar.dart';
@@ -40,19 +41,17 @@ class RadioAppPage extends StatefulWidget {
 /*
 */
 enum _Page implements TabOption {
-  listen(title: "Listen", iconData: Icons.audiotrack,widget: ListenPage()),
-  contact(title: "Contact", iconData: Icons.email_rounded, logoHeight: 100),
-  settings(title: "Settings", iconData: Icons.settings, logoHeight: 100),
-  news(title: "News", iconData: Icons.newspaper, logoHeight: 100);
+  listen(iconData: Icons.audiotrack,widget: ListenPage()),
+  contact(iconData: Icons.email_rounded, logoHeight: 100),
+  settings(iconData: Icons.settings, logoHeight: 100),
+  news(iconData: Icons.newspaper, logoHeight: 100);
 
   const _Page({
-    required this.title,
     required this.iconData,
     this.logoHeight = 250,
     this.widget
   });
 
-  final String title;
   final IconData iconData;
   final double logoHeight;
   final Widget ?widget;
@@ -63,6 +62,15 @@ enum _Page implements TabOption {
     settings => SettingsPage(),
     news => NewsPage()
   };
+
+ String title( BuildContext context) => switch(this) {
+    listen => AppLocalizations.of(context)!.tab_listen,
+    contact => AppLocalizations.of(context)!.tab_contact,
+    settings => AppLocalizations.of(context)!.tab_settings,
+    news =>AppLocalizations.of(context)!.tab_news
+
+ };
+
 
 }
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:radioapps/src/ui/components/colored_safe_area.dart';
 
-class TabOption {
-  final String title;
+abstract class TabOption {
   final IconData iconData;
 
-  const TabOption({required this.title, required this.iconData});
+  const TabOption({required this.iconData});
 
+  String title(BuildContext context);
   
 }
 
@@ -131,7 +131,7 @@ class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<T
         
         children: [
           Icon(option.iconData, color: color,),
-          Text(option.title, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),)
+          Text(option.title(context), style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),)
         ],
       );
   }

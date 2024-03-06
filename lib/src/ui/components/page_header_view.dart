@@ -8,25 +8,30 @@ class PageHeaderView extends StatelessWidget {
   const PageHeaderView({super.key, required this.logoHeight});
   
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        /// this animates the logo to logo height so that it can be large on the listen page 
-        /// and smaller when we want to show more data
-        AnimatedSize(
-          // vsync: this,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.fastOutSlowIn,
-          child:    SizedBox(height: logoHeight,
-          child:  F.appFlavor!.logo()
-        ),
-
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        children: [
+          /// this animates the logo to logo height so that it can be large on the listen page 
+          /// and smaller when we want to show more data
+          AnimatedSize(
+            // vsync: this,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.fastOutSlowIn,
+            child:    SizedBox(height: logoHeight,
+            child:  F.appFlavor!.logo()
+          ),
       
-
-
-        // todo - this is a clickable link
-        Text("Powered by Infonote Datasystems Ltd.",style: Theme.of(context).textTheme.labelSmall)
-      ],
+          ),
+        
+      
+      
+          // todo - this is a clickable link
+          Text("Powered by Infonote Datasystems Ltd.",style: Theme.of(context).textTheme.labelSmall)
+      
+          
+        ],
+      ),
     );
   }
 
