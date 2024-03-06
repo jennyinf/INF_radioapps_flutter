@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
         // Define a light and dark color theme. Then, read the user's
         // preferred ThemeMode (light, dark, or system default) from the
         // SettingsController to display the correct theme.
-        theme: AppTheme.haunted.themeData,
-        darkTheme: AppTheme.haunted.darkThemeData,
+        theme: AppTheme.haunted.themeData, // haunted will be overwritten by the app default
+        darkTheme: AppTheme.haunted.darkThemeData, // will not be used
         themeMode: ThemeMode.light,
       
         // Define a function to handle named routes in order to support
@@ -66,13 +66,8 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute<void>(
             settings: routeSettings,
             builder: (BuildContext context) {
-              switch (routeSettings.name) {
-                case SampleItemDetailsView.routeName:
-                  return const SampleItemDetailsView();
-                case SampleItemListView.routeName:
-                default:
-                  return const RadioAppPage();
-              }
+              // there is only one
+              return const RadioAppPage();
             },
           );
         },

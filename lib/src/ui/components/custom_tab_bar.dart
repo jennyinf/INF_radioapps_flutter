@@ -112,7 +112,7 @@ class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<T
                 shape: CircleBorder(side: BorderSide(width: 3.0, color: colorscheme.primary)),
                 backgroundColor: colorscheme.primary,
                 shadowColor: colorscheme.onBackground,
-                elevation: 10,
+                elevation: _selectedIndex == index ? 10 : 5,
                 side: BorderSide(width: 1.0, color: color),
                 padding: const EdgeInsets.all(10),
               ),

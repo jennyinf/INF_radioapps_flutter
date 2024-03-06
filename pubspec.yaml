@@ -15,6 +15,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # make http calls to a service
+  http: ^1.2.1
+
+
   audio_session: ^0.1.14
   rxdart: ^0.27.2
   # bloc state management
@@ -30,6 +34,9 @@ dependencies:
   just_audio_background: ^0.0.1-beta.11
 
   shared_preferences: ^2.2.2
+
+  # used to display the news feed
+  webview_flutter: ^4.7.0
 
 dev_dependencies:
   flutter_test:

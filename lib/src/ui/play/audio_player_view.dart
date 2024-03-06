@@ -104,42 +104,11 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
   void _updateState( AppState state ) {
     final audioState = context.read<AudioCubit>();
 
-    // TODO: multi stream
     audioState.updateStream(state.streamUri, state.streamTitle);
 
-//     if(state.streamUri.isNotEmpty && state.streamUri != _streamUri) {
-//       setState(() {
-//         _streamUri = state.streamUri;
-//         _playlist = AudioSource.uri(Uri.parse(_streamUri), 
-//                   tag: MediaItem(id: '1', title: state.radioConfiguration.streams[0].stationName)
-// );
-//         _init();
-//       });
-//     }
   }
 
-  Future<void> _init() async {
-    // final session = await AudioSession.instance;
-    // await session.configure(const AudioSessionConfiguration.music());
-    // // Listen to errors during playback.
-    // _player.playbackEventStream.listen((event) {},
-    //     onError: (Object e, StackTrace stackTrace) {
-    //   print('A stream error occurred: $e');
-    // });
-    // try {
-    //   await _player.setAudioSource(_playlist);
-    // } catch (e, stackTrace) {
-    //   // Catch load errors: 404, invalid url ...
-    //   print("Error loading playlist: $e");
-    //   print(stackTrace);
-    // }
-  }
 
-  // @override
-  // void dispose() {
-  //   _player.dispose();
-  //   super.dispose();
-  // }
 
 
   @override
@@ -170,13 +139,11 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
               ControlButtons(audioCubit.player),
               const SizedBox(height: 8.0),
               StreamBuilder(stream: player.icyMetadataStream, 
-                    builder: (context,snapshot) {
-                                          final metadata = snapshot.data;
+                builder: (context,snapshot) {
+                    final metadata = snapshot.data;
                     final title = metadata?.info?.title ?? '';
-                    final url = metadata?.info?.url;
                     return Column(
                       children: [
-                        if (url != null) Image.network(url),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(title,
@@ -225,7 +192,7 @@ class ControlButtons extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Icons.pause),
                 iconSize: 64.0,
-                onPressed: player.pause,
+                onPressed: player.stop, // using stop instead of pause - 
               );
             } else {
               return IconButton(
