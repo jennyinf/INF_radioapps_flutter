@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
+import 'package:radioapps/src/ui/components/cubit_state.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class NewsPage extends StatefulWidget {
@@ -11,11 +11,14 @@ class NewsPage extends StatefulWidget {
   State<NewsPage> createState() => _NewsPageState();
 }
 
-class _NewsPageState extends State<NewsPage> {
+class _NewsPageState extends CubitState<NewsPage,AppStateCubit> {
 
   late final WebViewController _controller;
 
-  void _setupWebPage(AppState state) {
+  @override
+  void setCubit(AppStateCubit cubit) {
+
+    final state = cubit.state;
 
     const webContent = """
                   <head>
@@ -26,8 +29,8 @@ class _NewsPageState extends State<NewsPage> {
                   <div class="fb-page" data-href="https://www.facebook.com/[***]" data-tabs="timeline" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false"><blockquote cite="https://www.facebook.com/[***]" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/[***]">[nnn]/a></blockquote></div>
                 """;
                 
-    final c = webContent.replaceAll("[***]", state.activeStream.facebookPage)
-                      .replaceAll("[nnn]", state.activeStream.stationName);
+    final c = webContent.replaceAll("[***]", state.activeStream?.facebookPage ?? "")
+                      .replaceAll("[nnn]", state.activeStream?.stationName ?? "");
 
 
     _controller.loadHtmlString(c, baseUrl: "https://www.infonote.com");
@@ -37,13 +40,6 @@ class _NewsPageState extends State<NewsPage> {
                
   
 
-  void _blankPage() {
-    const webContent = """
-                """;
-                
-    _controller.loadHtmlString(webContent);
-
-  }
 
   @override
   void initState() {
@@ -73,12 +69,7 @@ class _NewsPageState extends State<NewsPage> {
           ..loadRequest(Uri.parse('https://www.infonote.com'));
 
     _controller = controller;
-    // _blankPage();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) { 
-      final appstate = context.read<AppStateCubit>();
-      _setupWebPage(appstate.state);
-    });
 
   }
 

@@ -33,9 +33,11 @@ class AppState {
 
   int get selectedStream => 0; // todo - update the channel;
 
-  StationInfo get activeStream => radioConfiguration.streams[selectedStream];
-  String get streamUri => radioConfiguration.streams.isEmpty ? "" : radioConfiguration.streams[selectedStream].streamURL;
-  String get streamTitle => radioConfiguration.streams.isEmpty ? "" : radioConfiguration.streams[selectedStream].stationName;
+  StationInfo? get activeStream => radioConfiguration.streams.elementAtOrNull(selectedStream);
+  String get streamUri => activeStream?.streamURL ?? "";
+  String get streamTitle => activeStream?.stationName ?? "";
+
+  bool get hasNewsFeed => activeStream?.facebookPage.isNotEmpty ?? false;
 
   AppState copyWith({
     User? user,

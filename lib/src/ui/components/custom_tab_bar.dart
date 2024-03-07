@@ -123,7 +123,9 @@ class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<T
                 child: IconButton(onPressed: () => _selected(index), icon: _icon(option, color)));
 
     return Expanded(
-      child: button);
+      child: FittedBox(
+                      fit: BoxFit.scaleDown,
+        child: button));
   }
 
   Widget _icon( TabOption option, Color color) {

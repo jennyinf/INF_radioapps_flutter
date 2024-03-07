@@ -52,17 +52,19 @@ enum _Page implements TabOption {
     this.widget
   });
 
+  @override
   final IconData iconData;
   final double logoHeight;
   final Widget ?widget;
 
   Widget get page => switch(this) {
-    listen => ListenPage(),
-    contact => ContactPage(),
-    settings => SettingsPage(),
-    news => NewsPage()
+    listen => const ListenPage(),
+    contact => const ContactPage(),
+    settings => const SettingsPage(),
+    news => const NewsPage()
   };
 
+ @override
  String title( BuildContext context) => switch(this) {
     listen => AppLocalizations.of(context)!.tab_listen,
     contact => AppLocalizations.of(context)!.tab_contact,
@@ -120,7 +122,10 @@ class _RadioAppPageState extends State<RadioAppPage> {
 
   List<_Page> _tabOptions( AppState state ) {
     return [
-      _Page.listen, _Page.contact, _Page.settings, _Page.news
+      _Page.listen, 
+      _Page.contact, 
+      _Page.settings, 
+      if(state.hasNewsFeed) _Page.news
       // TabOption(title: "News", iconData: Icons.newspaper),
           
     ];

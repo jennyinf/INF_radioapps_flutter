@@ -38,6 +38,9 @@ dependencies:
   # used to display the news feed
   webview_flutter: ^4.7.0
 
+  # allows links to be opened (phone numbers, websites etc)
+  url_launcher: ^6.1.11
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -55,6 +58,7 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+    - assets/data/
     - path: assets/flavors/hfm/
       flavors:
         - hfm
