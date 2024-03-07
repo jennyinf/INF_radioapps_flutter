@@ -2,6 +2,7 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
+import 'package:radioapps/src/bloc/page_state.dart';
 import 'package:radioapps/src/ui/components/custom_tab_bar.dart';
 import 'package:radioapps/src/ui/components/page_header_view.dart';
 import 'package:radioapps/src/ui/extensions/color_extensions.dart';
@@ -40,13 +41,13 @@ class RadioAppPage extends StatefulWidget {
 
 /*
 */
-enum _Page implements TabOption {
+enum AppPage implements TabOption {
   listen(iconData: Icons.audiotrack,widget: ListenPage()),
   contact(iconData: Icons.email_rounded, logoHeight: 100),
   settings(iconData: Icons.settings, logoHeight: 100),
   news(iconData: Icons.newspaper, logoHeight: 100);
 
-  const _Page({
+  const AppPage({
     required this.iconData,
     this.logoHeight = 250,
     this.widget
@@ -81,51 +82,53 @@ class _RadioAppPageState extends State<RadioAppPage> {
   // the logo size will depend on the currently selected page
   double get logoHeight => 250;
 
-  // the currently selected page
-  _Page _page = _Page.listen;
-
-
-   _selectPage(_Page page) {
-    setState(() {
-      _page = page;
-    });
-
-  }
+  // create the cubit to monitor the tab bar
+  final PageStateCubit<AppPage> _pageStateCubit = PageStateCubit(initialState: PageState(page: AppPage.listen));
 
   @override
   Widget build(BuildContext context) {
 
     final appstate = context.watch<AppStateCubit>();
 
+
     final themeData = appstate.state.themeData(context);
 
-    return Theme(
-      data : themeData,
-      child: Scaffold(
-        bottomNavigationBar: 
-            CustomTabBar(
-                options: _tabOptions(appstate.state),
-                onChanged: _selectPage,
-                ),
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+    return BlocProvider(
+      create: (context) => _pageStateCubit,
+      child:   Builder(
+        builder: (context) {
+          final pagestate = context.watch<PageStateCubit<AppPage>>();
 
-              PageHeaderView(logoHeight: _page.logoHeight),
-              _page.page
-            ]),
-        ),
-      ),
+          return Theme(
+              data : themeData,
+              child: Scaffold(
+                bottomNavigationBar: 
+                    CustomTabBar(
+                        options: _tabOptions(appstate.state),
+                        ),
+                body: SafeArea(
+                  child:
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+            
+                      PageHeaderView(logoHeight: pagestate.state.page.logoHeight),
+                      pagestate.state.page.page
+                    ])
+                ),
+              ),
+            );
+        }
+      )
     );
   }
 
-  List<_Page> _tabOptions( AppState state ) {
+  List<AppPage> _tabOptions( AppState state ) {
     return [
-      _Page.listen, 
-      _Page.contact, 
-      _Page.settings, 
-      if(state.hasNewsFeed) _Page.news
+      AppPage.listen, 
+      AppPage.contact, 
+      AppPage.settings, 
+      if(state.hasNewsFeed) AppPage.news
       // TabOption(title: "News", iconData: Icons.newspaper),
           
     ];

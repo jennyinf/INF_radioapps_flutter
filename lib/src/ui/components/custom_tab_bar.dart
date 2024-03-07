@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:radioapps/src/bloc/page_state.dart';
 import 'package:radioapps/src/ui/components/colored_safe_area.dart';
 
 abstract class TabOption {
@@ -10,12 +12,20 @@ abstract class TabOption {
   
 }
 
+///
+/// CustomTabBar relies on a PageStateCubit to generate its state.
+/// This is wrapped up in a provider within the containing class
+/// here: RadioappPage.
+/// A better way might be for the tab bar to create its own cubit and
+/// add page to TabOption.
+/// Pages can still access the page state cubit and change the page but the
+/// holding page just needs to know about the tab bar
+/// 
 class CustomTabBar<TabItem extends TabOption> extends StatefulWidget {
 
   final List<TabItem> options;
-  final Function(TabItem) onChanged;
 
-  const CustomTabBar({super.key, required this.options, required this.onChanged});
+  const CustomTabBar({super.key, required this.options});
 
   @override
   State<CustomTabBar> createState() => _CustomTabBarState<TabItem>();
@@ -24,23 +34,19 @@ class CustomTabBar<TabItem extends TabOption> extends StatefulWidget {
 
 class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<TabItem>> {
 
-  int _selectedIndex = 0;
 
 
+  @override
+  void initState() {
+    super.initState();
 
-  // Widget _option(int index) {
-  void _selected( int index) {
-    setState(() {
-      _selectedIndex = index;
-
-      final option = widget.options[index];
-      widget.onChanged(option); 
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
+
+    final pageStateCubit = context.watch<PageStateCubit<TabItem>>();
 
     final Color background = themeData.colorScheme.background;
     final Color fill = themeData.colorScheme.primary;
@@ -73,11 +79,11 @@ class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<T
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _option(1),
-                _option(3),
-                _centralOption,
-                _option(4),
-                _option(2),
+                _option(1,pageStateCubit),
+                _option(3,pageStateCubit),
+                _centralOption(pageStateCubit),
+                _option(4,pageStateCubit),
+                _option(2,pageStateCubit),
         
               ], 
             ),
@@ -85,11 +91,11 @@ class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<T
     );
   }
 
-  Widget get _centralOption {
+  Widget _centralOption(PageStateCubit<TabItem> cubit) {
     final option = widget.options.firstOrNull;
 
 
-    return option == null ? space : _option(0,outlined: true);
+    return option == null ? space : _option(0,cubit, outlined: true);
   }
 
   Widget get space {
@@ -98,21 +104,23 @@ class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<T
     return _icon(option, color);
   }
 
-  Widget _option(int index, {bool outlined = false}) {
+  Widget _option(int index, PageStateCubit<TabItem> cubit, {bool outlined = false}) {
     final option = widget.options.elementAtOrNull(index);
 
     if( option == null ) { return Expanded(child: space); }
 
+    final state = cubit.state;
+
     final colorscheme = Theme.of(context).colorScheme;
-    final color = index == _selectedIndex ? colorscheme.onPrimary : colorscheme.onPrimary.withAlpha(100);
+    final color = state.isSelected(option) ? colorscheme.onPrimary : colorscheme.onPrimary.withAlpha(100);
 
     final button = outlined ? ElevatedButton(
-              onPressed: () => _selected(index), 
+              onPressed: () => cubit.setPage(option), 
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(side: BorderSide(width: 3.0, color: colorscheme.primary)),
                 backgroundColor: colorscheme.primary,
                 shadowColor: colorscheme.onBackground,
-                elevation: _selectedIndex == index ? 10 : 5,
+                elevation: state.isSelected(option) ? 10 : 5,
                 side: BorderSide(width: 1.0, color: color),
                 padding: const EdgeInsets.all(10),
               ),
@@ -120,7 +128,7 @@ class _CustomTabBarState<TabItem extends TabOption> extends State<CustomTabBar<T
               child: _icon(option, color)) : 
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                child: IconButton(onPressed: () => _selected(index), icon: _icon(option, color)));
+                child: IconButton(onPressed: () => cubit.setPage(option), icon: _icon(option, color)));
 
     return Expanded(
       child: FittedBox(

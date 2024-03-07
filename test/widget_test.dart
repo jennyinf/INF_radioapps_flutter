@@ -10,22 +10,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:radioapps/src/ui/app.dart';
 
 void main() {
+    IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   group('MyWidget', () {
     testWidgets('should display a string of text', (WidgetTester tester) async {
       // Define a Widget
-      const myWidget = MaterialApp(
-        home: Scaffold(
-          body: Text('Hello'),
-        ),
-      );
+      const myWidget = MyApp(      );
 
       // Build myWidget and trigger a frame.
       await tester.pumpWidget(myWidget);
 
       // Verify myWidget shows some text
-      expect(find.byType(Text), findsOneWidget);
+      expect(find.byType(Text), findsAtLeast(1));
     });
   });
 }

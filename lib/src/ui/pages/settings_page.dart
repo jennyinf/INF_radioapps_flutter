@@ -47,52 +47,54 @@ class _SettingsPageState extends CubitState<SettingsPage,AppStateCubit> {
 
     final localizations = AppLocalizations.of(context)!;
 
-    return Form(
-      key: _formKey,
-      child:  Column(
-        children: [
-          SectionHeader(title: localizations.settings_contact_section),
-          _privacyRow(context),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                  labelText: localizations.settings_name_field,
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child:  Column(
+          children: [
+            SectionHeader(title: localizations.settings_contact_section),
+            _privacyRow(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                    labelText: localizations.settings_name_field,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextFormField(
-              controller: _nickNameController,
-              decoration: InputDecoration(
-                  labelText: localizations.settings_nickname_field,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: TextFormField(
+                controller: _nickNameController,
+                decoration: InputDecoration(
+                    labelText: localizations.settings_nickname_field,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: TextFormField(
-              controller: _phoneNumberController,
-              decoration: InputDecoration(
-                  labelText: localizations.settings_phone_field,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: TextFormField(
+                controller: _phoneNumberController,
+                decoration: InputDecoration(
+                    labelText: localizations.settings_phone_field,
+                ),
               ),
             ),
-          ),
-          ElevatedButton(onPressed: _save, child: Text(localizations.save)),
-
-          // InkWell(
-          //   onTap: _toggleViewPrivacy,
-          //   child: SectionHeader(title: localizations.settings_privacy,
-          //               trailing: Icon( Icons.info, color: Theme.of(context).colorScheme.onSecondary,) ),
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: _viewPrivacyStatement ? Text(localizations.settings_privacy_statement) : const Text(""),
-          // ),
-
-        ],
+            ElevatedButton(onPressed: _save, child: Text(localizations.save)),
+      
+            // InkWell(
+            //   onTap: _toggleViewPrivacy,
+            //   child: SectionHeader(title: localizations.settings_privacy,
+            //               trailing: Icon( Icons.info, color: Theme.of(context).colorScheme.onSecondary,) ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: _viewPrivacyStatement ? Text(localizations.settings_privacy_statement) : const Text(""),
+            // ),
+      
+          ],
+        ),
       ),
     );
   }

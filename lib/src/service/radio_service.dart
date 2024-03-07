@@ -9,7 +9,7 @@ import 'package:radioapps/src/service/user.dart';
 
 class RadioService {
 
-  User user = User(name: "", password: "");
+  AppConfig user = const AppConfig(name: "", password: "",iOSAppId:"");
 
   RadioService();
   
@@ -18,7 +18,7 @@ class RadioService {
     // load the user details first - we need these to talk to the service
     final value = await rootBundle.loadString("${F.appFlavor?.assetsFolder ?? "assets/default"}/user.json");
     final jsonResult = jsonDecode(value);
-    user = User.fromJson(jsonResult);
+    user = AppConfig.fromJson(jsonResult);
 
 
   }

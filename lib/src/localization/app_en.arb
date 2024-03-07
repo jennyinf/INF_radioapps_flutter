@@ -20,6 +20,13 @@
   "about_donation" : "Donations",
   "about_statement" : "<p>Enjoy your local community or hospital radio station, wherever you are in the world. You can send requests, catch up on local news or just simply sit back and listen to the music.</p><p>Community radio stations are an invaluable resource and an integral part of the local community. Largely run by volunteers, community and hospital radio stations are an excellent source of local news and support.</p>",
 
+  "request_setup_needed" : "You need to add your contact details before you can submit a request.  Tap here to view settings.",
+  "request_message_row" : "Message",
+  "request_add_song" : "Request a song",
+  "request_artist_row" : "Artist",
+  "request_song_row" : "Title",
+  "request_select_song_row" : "Select Song...",
+  "request_send_button" : "Send",
 
   
   "settings_privacy" : "Privacy",

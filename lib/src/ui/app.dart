@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,7 +8,6 @@ import 'package:radioapps/flavors_extensions.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
 import 'package:radioapps/src/ui/pages/radioapp_page.dart';
 import 'package:radioapps/src/bloc/audio_cubit.dart';
-import 'package:radioapps/src/ui/play/audio_player_view.dart';
 import 'package:radioapps/src/ui/style/app_theme.dart';
 
 
@@ -19,6 +19,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// force the app into portrait mode.  
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     // Glue the SettingsController to the MaterialApp.
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.
@@ -92,17 +98,15 @@ class _AppStateProviderState extends State<AppStateProvider> {
 void initState() {
   super.initState();
 
-  // call this after the app has laid out
-  WidgetsBinding.instance.addPostFrameCallback((_) { 
-
     AppState initialState = AppState(assetLocation: F.appFlavor?.dataFile ?? "");
     stateCubit = AppStateCubit(initialState: initialState);
     stateCubit.initialise();
 
     audioCubit = AudioCubit(initialState: AudioState());
     audioCubit.initialise();
-  });
-}
+  }
+
+
 
   /// add all the cubits needed by the app.
   /// when a view is initialised that needs a cubit it should make sure it is updated.

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:radioapps/src/bloc/app_state.dart';
 import 'package:radioapps/src/ui/pages/app_info_view.dart';
 import 'package:radioapps/src/ui/play/audio_player_view.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ListenPage extends StatelessWidget {
   const ListenPage({super.key});
@@ -39,18 +42,15 @@ class ListenPage extends StatelessWidget {
     return Text("Sponsor goes here", textAlign: TextAlign.center,);
   }
 
-  void _showShareSheet(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        useRootNavigator: true,
-        builder: (context) {
-          return Padding(
-            padding:  MediaQuery.of(context).viewInsets,
-            child: AppInfoView(),
-          );
-        });
+  void _showShareSheet(BuildContext context) async {
 
+    final state = context.read<AppStateCubit>().state;
+    
+    final appStoreLink = state.appStoreLink;
+
+    final subject = "I'm listening to ${state.streamTitle} via their app!";
+
+    await Share.share("$subject\n$appStoreLink", subject: subject, );
   }
 
 

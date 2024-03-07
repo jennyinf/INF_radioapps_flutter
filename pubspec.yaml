@@ -4,7 +4,7 @@ description: "Radioapps base project"
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 3.0.0+1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -41,7 +41,17 @@ dependencies:
   # allows links to be opened (phone numbers, websites etc)
   url_launcher: ^6.1.11
 
+  # share sheet
+  share_plus: ^7.2.2
+
+  # query the app about its build etc
+  # - downgraded from the latest because of a clash with http
+  package_info_plus: ^4.2.0
+
 dev_dependencies:
+
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
 
