@@ -74,6 +74,8 @@ class _ContactPageState extends CubitState<ContactPage,AppStateCubit> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextFormField(
                 controller: _message,
+                maxLines: 3,
+                minLines: 3,
                 decoration: InputDecoration(
                     labelText: localisations.request_message_row,
                 ),
