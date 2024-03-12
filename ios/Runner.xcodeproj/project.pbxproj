@@ -755,6 +755,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BD9EC8A1B51109A4FA764947 /* Pods-Runner.debug-hfm.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 65TEYJ9M2M;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = Runner;
 			};
@@ -764,6 +765,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 73AC63AB10C969C4CA1714B5 /* Pods-Runner.profile-hfm.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 65TEYJ9M2M;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = Runner;
 			};
@@ -773,6 +775,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C6C32AFB08B3D497156E12C7 /* Pods-Runner.release-hfm.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 65TEYJ9M2M;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = Runner;
 			};
@@ -782,6 +785,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B84A4E979E56D2BAF4F2B5CB /* Pods-Runner.debug-greatdriffield.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 65TEYJ9M2M;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = Runner;
 			};
@@ -791,6 +795,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E3A870FADC94D59BC98EAB2F /* Pods-Runner.profile-greatdriffield.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 65TEYJ9M2M;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = Runner;
 			};
@@ -800,6 +805,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 69CF14347F5F836A3BC61746 /* Pods-Runner.release-greatdriffield.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 65TEYJ9M2M;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = Runner;
 			};

@@ -13,6 +13,10 @@
     <array>
       <string>audio</string>
     </array>
+
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Search your music library for songs to submit requests</string>
+
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>

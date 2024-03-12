@@ -18,6 +18,7 @@ dependencies:
   # make http calls to a service
   http: ^1.2.1
 
+  device_info_plus: ^9.1.2
 
   audio_session: ^0.1.14
   rxdart: ^0.27.2
@@ -47,6 +48,9 @@ dependencies:
   # query the app about its build etc
   # - downgraded from the latest because of a clash with http
   package_info_plus: ^4.2.0
+
+  # used to query the audio library to select a song
+  on_audio_query: ^2.9.0
 
 dev_dependencies:
 

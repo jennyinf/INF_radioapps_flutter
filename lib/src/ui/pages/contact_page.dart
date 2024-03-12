@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
 import 'package:radioapps/src/bloc/page_state.dart';
+import 'package:radioapps/src/ui/components/audio_library/audio_query_view.dart';
 import 'package:radioapps/src/ui/components/cubit_state.dart';
-import 'package:radioapps/src/ui/components/form/section_header.dart';
+import 'package:radioapps/src/ui/components/wide_elevated_button.dart';
 import 'package:radioapps/src/ui/components/widget_extensions.dart';
 import 'package:radioapps/src/ui/pages/radioapp_page.dart';
 
@@ -30,6 +32,42 @@ class _ContactPageState extends CubitState<ContactPage,AppStateCubit> {
 
   bool _sendSongRequest = false;
 
+  bool get _canSend => _message.text.isNotEmpty;
+
+  bool _tappedSend = false;
+  RequestStatus _requestStatus = RequestStatus.pending;
+
+  void _send() {
+    final cubit = context.read<AppStateCubit>();
+
+    setState(() {
+      _tappedSend = true;
+    });
+    cubit.sendRequest(message: _message.text.trim(),
+                      artist: _artist.text.trim(),
+                      song: _title.text.trim());
+
+  }
+
+  void _updateState(AppState state) {
+    // only relevant if we tapped send
+    if( _tappedSend ) {
+      var status = state.status;
+
+      if( status == RequestStatus.succeeded || status == RequestStatus.failed ) {
+        status = RequestStatus.pending;
+        /// clear down the message - we are done
+        _message.text = "";
+        _artist.text = "";
+        _title.text = "";
+        _tappedSend = false;
+      }
+      setState(() {
+        _requestStatus = status;
+      });
+    }
+
+  }
   @override
   void setCubit( AppStateCubit cubit ) {
     setState(() {
@@ -66,41 +104,60 @@ class _ContactPageState extends CubitState<ContactPage,AppStateCubit> {
     
   }
   Widget mainView(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: TextFormField(
-                controller: _message,
-                maxLines: 3,
-                minLines: 3,
-                decoration: InputDecoration(
-                    labelText: localisations.request_message_row,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(localisations.request_add_song),
-                  const Spacer(),
-                  Switch(value: _sendSongRequest, onChanged: (value) {
-                    setState(() {
-                    _sendSongRequest = value;
-                   });
-                  })
-                ],
-              ),
-            ),
-            if(_sendSongRequest) _songRequestView(context)
 
 
-
-        ]
-      )
+    return BlocListener<AppStateCubit,AppState>(
+      bloc: context.read<AppStateCubit>(),
+      listener: (context, state) => _updateState(state),
+      child: Expanded(
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: TextFormField(
+                      controller: _message,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.text,
+                      maxLines: 3,
+                      minLines: 3,
+                      onChanged: (_) => setState(() {
+                        // state will be recalculated
+                      }),
+                      decoration: InputDecoration(
+                          labelText: localisations.request_message_row,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Text(localisations.request_add_song),
+                        const Spacer(),
+                        Switch(value: _sendSongRequest, onChanged: (value) {
+                          setState(() {
+                          _sendSongRequest = value;
+                         });
+                        })
+                      ],
+                    ),
+                  ),
+                  if(_sendSongRequest) _songRequestView(context),
+          
+                  if(_canSend && !_tappedSend) WideElevatedButton(padding: 8.0, 
+                        usePrimary: true,
+                        onTap: _send, 
+                        title: localisations.send)
+      
+          
+              ]
+            )
+          ),
+        ),
+      ),
     );
   }
 
@@ -125,34 +182,34 @@ class _ContactPageState extends CubitState<ContactPage,AppStateCubit> {
                 ),
               ),
             ),
-
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(onPressed: _addSongFromLibrary, 
-                child: SizedBox( width: double.infinity, 
-                    child: Text(localisations.request_select_song_row, textAlign: TextAlign.center,))),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(onPressed: _addSongFromLibrary, 
-                style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                textStyle: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold)),
-                child: SizedBox( width: double.infinity, 
-                    child: Text(localisations.save, textAlign: TextAlign.center,))),
-          )
-
+    
+          WideElevatedButton(padding: 8.0, 
+                      onTap: () => _addSongFromLibrary(context), 
+                      title: localisations.request_select_song_row),
+    
       ],
-
-
+    
+    
     );
     
   }
 
-  void _addSongFromLibrary() {
+  void _addSongFromLibrary(BuildContext context) async {
+    final value = await showModalBottomSheet<SongModel>(
+        context: context,
+        isScrollControlled: false,
+        useRootNavigator: true,
+        builder: (context) {
+          return Padding(
+            padding:  MediaQuery.of(context).viewInsets,
+            child: const AudioQueryView(),
+          );
+        });
 
+    if( value != null ) {
+      _artist.text = value.artist ?? "";
+      _title.text = value.title;
+
+    }
   }
 }
