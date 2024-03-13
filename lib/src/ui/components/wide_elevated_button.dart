@@ -20,7 +20,7 @@ class WideElevatedButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
                   backgroundColor: usePrimary ? Theme.of(context).colorScheme.primary : null,
                   foregroundColor: usePrimary ? Theme.of(context).colorScheme.onPrimary : null,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                   textStyle:  Theme.of(context).textTheme.bodyLarge,
           ),
                   child: SizedBox( width: double.infinity, 
