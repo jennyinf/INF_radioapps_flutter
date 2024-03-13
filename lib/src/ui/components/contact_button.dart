@@ -101,15 +101,23 @@ class ContactButton extends StatelessWidget {
     super.key,
     required this.value,
     required this.type,
-    this.title
+    this.title, this.child
   });
 
   final String? title;
   final String value;
   final ContactType type;
+  // set this for a custom contact button
+  final Widget ?child;
 
   @override Widget build( BuildContext context ) {
 
+    if( child != null ) {
+      return InkWell(
+          onTap:() { type.open(context,value); },
+        child: child!,
+      );
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(

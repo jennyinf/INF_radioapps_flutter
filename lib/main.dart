@@ -6,6 +6,8 @@ import 'package:radioapps/src/ui/app.dart';
 
 FutureOr<void> main() async {
 
+    WidgetsFlutterBinding.ensureInitialized();
+
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',

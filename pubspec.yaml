@@ -1,10 +1,10 @@
 name: radioapps
-description: "Radioapps base project"
+description: "Radioapps Project"
 
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 3.0.0+1
+version: 3.0.0+30002
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -45,23 +45,30 @@ dependencies:
   # share sheet
   share_plus: ^7.2.2
 
-  # query the app about its build etc
-  # - downgraded from the latest because of a clash with http
+  # # query the app about its build etc
+  # # - downgraded from the latest because of a clash with http
   package_info_plus: ^4.2.0
 
-  # used to query the audio library to select a song
+  # # used to query the audio library to select a song
   on_audio_query: ^2.9.0
+  # screenshot: ^2.1.0
 
 dev_dependencies:
 
   integration_test:
     sdk: flutter
+ 
   flutter_test:
+    sdk: flutter
+
+  flutter_driver:
     sdk: flutter
 
   flutter_lints: ^3.0.1
 
   flutter_flavorizr: ^2.2.1
+
+  
 
 flutter:
   uses-material-design: true
@@ -73,6 +80,10 @@ flutter:
     # Add assets from the images directory to the application.
     - assets/images/
     - assets/data/
+    #for screenshot include all the assets
+    # - path: assets/flavors
+    #   flavors:
+    #     - screenshot
     - path: assets/flavors/hfm/
       flavors:
         - hfm

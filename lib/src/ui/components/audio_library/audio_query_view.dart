@@ -88,7 +88,7 @@ class _AudioQueryViewState extends State<AudioQueryView> {
       appBar: AppBar(
         title:  Text(localisations.requestSelectAudioTitle),
       ),
-      body: _body(context),
+      body: _hasPermission ? _body(context) : Text("No permission to access music library"),
 
     );
     

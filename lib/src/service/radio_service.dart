@@ -71,7 +71,7 @@ class RadioService {
     final contentType = isForm ? 'application/x-www-form-urlencoded' : 'application/json; charset=UTF-8';
 
     
-    final authorizationString = kDebugMode ? "TestStation:Jubil33HR" : "${user.name}:${user.password}";
+    final authorizationString = kDebugMode || true ? "TestStation:Jubil33HR" : "${user.name}:${user.password}";
     final u = utf8.encode(authorizationString);
     final b = base64.encode(u);
         

@@ -21,6 +21,19 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+// some apps use apks and some appbundles.  When building via flutter a property will be passed
+// in to indicate whick key alias to use.  They are different because the original apk key
+// is not secure enough to be used in bundles.
+def keyStoreAlias = 'bunde'
+if(project.hasProperty('keyAliasName')) {
+    keyStoreAlias = project.getProperty('keyAliasName')
+}
 
 android {
 
@@ -64,19 +77,31 @@ android {
         applicationId "com.example.radioapps"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
             multiDexEnabled true
 
     }
+signingConfigs {
+
+    release {
+                // TODO: some apps are apks and some bundles - we should see if we can migrate to a bundle
+                keyAlias keyStoreAlias
+                keyPassword keystoreProperties['keyPassword']
+                storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+                storePassword keystoreProperties['storePassword']
+            }
+            
+        }
 
     buildTypes {
+
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

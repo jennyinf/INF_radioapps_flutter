@@ -127,10 +127,10 @@ class AppStateCubit extends Cubit<AppState> {
 
     }
 
-     Future<PackageInfo> _initPackageInfo() async {
-        final PackageInfo info = await PackageInfo.fromPlatform();
-        return info;
-      }
+    Future<PackageInfo> _initPackageInfo() async {
+      final PackageInfo info = await PackageInfo.fromPlatform();
+      return info;
+    }
 
 
     /// update the contact user
