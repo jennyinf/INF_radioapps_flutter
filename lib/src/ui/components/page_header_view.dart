@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:radioapps/flavors.dart';
 import 'package:radioapps/flavors_extensions.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:radioapps/src/ui/components/contact_button.dart';
 import 'package:radioapps/src/ui/components/widget_extensions.dart';
 
@@ -27,9 +26,6 @@ class PageHeaderView extends StatelessWidget {
           ),
       
           ),
-        
-      
-      
           powerText(context)      
           
         ],

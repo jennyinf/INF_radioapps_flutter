@@ -3,13 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:radioapps/src/bloc/contact_user.dart';
-import 'package:radioapps/src/service/data/data_preferences.dart';
 import 'package:radioapps/src/service/radio_configuration.dart';
-import 'package:radioapps/src/service/radio_service.dart';
-import 'package:radioapps/src/service/station_data.dart';
 import 'package:radioapps/src/service/station_info.dart';
 import 'package:radioapps/src/service/user.dart';
 
@@ -27,6 +22,9 @@ class AppState {
   final bool debugMode;
   final ContactUser deviceUser;
   final String appPackageId;
+  final Uri ?appLogo; // used to store a URI to the icon file to display in external media
+  final AppConfig debugUser;
+  final bool sponsorViewed;
 
   final RequestStatus status;
 
@@ -38,12 +36,20 @@ class AppState {
                 this.debugMode = false,
                 this.appPackageId = "",
                 this.status = RequestStatus.pending,
+                this.appLogo,
+                this.sponsorViewed = false,
+                this.debugUser = const AppConfig(name: "", password: "", iOSAppId: ""),
                 this.deviceUser = const ContactUser()  });
 
-  String get remoteBaseLocation => debugMode ? "https://raw.githubusercontent.com/InfonoteDS/INF_data/master/radioapps/" :
+  String get remoteBaseLocation => debugMode || debugModeEnabled ? "https://raw.githubusercontent.com/InfonoteDS/INF_data/master/radioapps/" :
                    "https://ids.infonote.com/RadioService/radioapps/";
 
-  String get remoteLocation => "$remoteBaseLocation/${user.name}/data.json";
+  String get remoteLocation {
+    final u = isAppSecret && debugUser.name.isNotEmpty ? debugUser : user;
+
+    return "$remoteBaseLocation/${u.name}/data.json";
+
+  } 
 
   int get selectedStream => 0; // todo - update the channel;
 
@@ -51,7 +57,11 @@ class AppState {
   String get streamUri => activeStream?.streamURL ?? "";
   String get streamTitle => activeStream?.stationName ?? "";
 
-  bool get hasNewsFeed => activeStream?.facebookPage.isNotEmpty ?? false;
+  bool get hasNewsFeed => (activeStream?.hasNewsFeed ?? false);
+
+  bool get isAppSecret => deviceUser.isAppSecret;
+
+  bool get debugModeEnabled => isAppSecret && deviceUser.isAppSecret;
 
   // get the link for the app store - if appropriate
   String get appStoreLink {
@@ -64,7 +74,7 @@ class AppState {
     } else if (Platform.isMacOS) {
       return "https://itunes.apple.com/us/app/apple-store/id${user.iOSAppId}?mt=8";
     }
-    return activeStream?.stationName ?? "";;
+    return activeStream?.stationName ?? "";
 
   }
 
@@ -76,6 +86,9 @@ class AppState {
     String? appPackageId,
     ContactUser ?deviceUser,
     RequestStatus ?status,
+    AppConfig ?debugUser,
+    bool ?sponsorViewed,
+    Uri ?appLogo,
   }) {
     return AppState(
       user: user ?? this.user,
@@ -84,74 +97,11 @@ class AppState {
       debugMode: debugMode ?? this.debugMode,
       deviceUser: deviceUser ?? this.deviceUser,
       appPackageId: appPackageId ?? this.appPackageId,
-      status: status ?? this.status
+      debugUser: debugUser ?? this.debugUser,
+      sponsorViewed: sponsorViewed ?? this.sponsorViewed,
+      status: status ?? this.status,
+      appLogo : appLogo ?? this.appLogo
     );
   }
 
-}
-
-class AppStateCubit extends Cubit<AppState> {
-
-
-  DataPreferences<ContactUser> contactPreferences = DataPreferences(key: "contact", serializer: ContactUserSerializer());
-
-  final RadioService _service = RadioService();
-
-  AppStateCubit({int index = -1, required AppState initialState}) 
-                          : super(initialState);
-
-    /// initialise the app with data pulled from the assets directory and user preferences
-    void initialise() async {
-
-      RadioService service = _service;
-      await service.initialise();
-
-      emit(state.copyWith(user: service.user));
-
-      final contactUser = await contactPreferences.load();
-      if( contactUser != null ) {
-        emit(state.copyWith(deviceUser: contactUser));
-      }
-
-      final appinfo = await _initPackageInfo();
-      final id = appinfo.packageName;
-      emit(state.copyWith(appPackageId: id));
-
-      StationData stationData = StationData(assetLocation: state.assetLocation, 
-                          remoteLocation: state.remoteLocation);
-
-      // should I use listen here - this will never stop      
-      await for(final data in stationData.dataStream) {
-        emit(state.copyWith(radioConfiguration: data));
-      }
-
-    }
-
-    Future<PackageInfo> _initPackageInfo() async {
-      final PackageInfo info = await PackageInfo.fromPlatform();
-      return info;
-    }
-
-
-    /// update the contact user
-    void setContactUser( ContactUser contactUser) async {
-      final v = await contactPreferences.save(contactUser);
-      if( v ) {
-        emit(state.copyWith(deviceUser: contactUser));
-      }
-    }
-
-    void setStatus(RequestStatus status) => emit(state.copyWith(status: status));
-
-    /// send a request to the station
-    void sendRequest( {required String message, String artist = "", String song = ""}) async {
-      
-      setStatus(RequestStatus.processing);
-      bool succeeded = await _service.request( user: state.deviceUser, message: message,
-                    artist: artist, song:song);
-
-      setStatus(succeeded ? RequestStatus.succeeded : RequestStatus.failed);      
-    }
-
-                          
 }

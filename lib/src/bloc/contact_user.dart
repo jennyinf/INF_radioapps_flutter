@@ -32,6 +32,10 @@ class ContactUser {
     );
   }
 
+  /// is the app secret set
+  bool get isAppSecret => name == 'infonote' && phoneNumber == '1nf0n0t3';
+
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,

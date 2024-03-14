@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
+import 'package:radioapps/src/bloc/app_state_cubit.dart';
 import 'package:radioapps/src/bloc/contact_user.dart';
+import 'package:radioapps/src/service/user.dart';
 import 'package:radioapps/src/ui/components/cubit_state.dart';
 import 'package:radioapps/src/ui/components/form/section_header.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,6 +27,9 @@ class _SettingsPageState extends CubitState<SettingsPage,AppStateCubit> {
   final TextEditingController _nickNameController = TextEditingController(text: "");
   final TextEditingController _phoneNumberController = TextEditingController(text: "");
 
+  bool _debugModeEnabled = false;
+  final TextEditingController _stationUserController = TextEditingController(text: "");
+
   void _save() {
     final appstate = context.read<AppStateCubit>();
 
@@ -32,12 +37,22 @@ class _SettingsPageState extends CubitState<SettingsPage,AppStateCubit> {
                               nickname: _nickNameController.text,
                               phoneNumber: _phoneNumberController.text));
   }
+
+  void _update() {
+    final debugUser = AppConfig(name: _stationUserController.text.trim(), password: _debugModeEnabled ? "debug" : "", iOSAppId: "");
+
+    final appstate = context.read<AppStateCubit>();
+    appstate.updateDebugUser(debugUser);
+  }
   @override void setCubit( AppStateCubit cubit) {
     final user = cubit.state.deviceUser;
 
     _nameController.text = user.name;
     _nickNameController.text = user.nickname;
     _phoneNumberController.text = user.phoneNumber;
+    _stationUserController.text = cubit.state.debugUser.name;
+
+    _debugModeEnabled = cubit.state.debugModeEnabled;
 
       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("yay")));
 
@@ -47,6 +62,8 @@ class _SettingsPageState extends CubitState<SettingsPage,AppStateCubit> {
   Widget build(BuildContext context) {
 
     final localizations = AppLocalizations.of(context)!;
+
+    final appstate = context.watch<AppStateCubit>();
 
     return Expanded(
       child: SingleChildScrollView(
@@ -86,12 +103,54 @@ class _SettingsPageState extends CubitState<SettingsPage,AppStateCubit> {
               WideElevatedButton(onTap: _save, 
                           title: localizations.save,
                           padding: 8.0,),
-        
-        
+              if( appstate.state.isAppSecret ) _appSecretSection(),        
             ],
           ),
         ),
       ),
+    );
+  }
+
+  /// no localisation here - this is private to us
+  Widget _appSecretSection() {
+    return Column(
+      children: [
+        const SectionHeader(title: "Station"),
+        Padding(
+           padding: const EdgeInsets.all(8.0),
+           child: Text(
+              "This will update the station the app connects to, so that data updates can be tested.  If you set debug on, data will be retrieved from the interim debug service.  The app icon and name will remain untouched, and do not send via the contact form as it will fail.",
+              style: Theme.of(context).textTheme.labelSmall,),
+         ),
+         Padding(
+           padding: const EdgeInsets.all(8.0),
+           child: Row(
+             children: [
+              const Text("Use debug data"),
+              const Spacer(),
+                Switch(value: _debugModeEnabled, onChanged: (value) {
+                  setState(() {
+                    _debugModeEnabled = value;
+                  });
+                
+                }),
+             ],
+           ),
+         ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextFormField(
+              controller: _stationUserController,
+              decoration: const InputDecoration(
+                  labelText: "Station User Name",
+              ),
+            ),
+          ),
+          WideElevatedButton(onTap: _update, 
+                    title: "Update App",
+                    padding: 8.0,),
+
+      ],
     );
   }
 

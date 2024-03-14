@@ -18,6 +18,9 @@
   "tab_listen" : "Listen",
   "tab_settings" : "Settings",
 
+  "audioPlayingNow" : "Now Playing:",
+  "audioAdjustVolume" : "Adjust volume",
+
   "about_call" : "Call Us",
   "about_donation" : "Donations",
   "about_statement" : "<p>Enjoy your local community or hospital radio station, wherever you are in the world. You can send requests, catch up on local news or just simply sit back and listen to the music.</p><p>Community radio stations are an invaluable resource and an integral part of the local community. Largely run by volunteers, community and hospital radio stations are an excellent source of local news and support.</p>",
@@ -42,6 +45,8 @@
   "settings_name_field" : "Name",
   "settings_nickname_field" : "Nickname",
   "settings_phone_field" : "Phone Number",
+
+  "listen_sponsored_by" : "Sponsored By",
 
   "contact_phone_failed" : "Unable to call from this device",
   "contact_email_failed" : "Unable to email from this device",

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:radioapps/src/bloc/app_state.dart';
+import 'package:radioapps/src/bloc/app_state_cubit.dart';
 import 'package:radioapps/src/bloc/audio_cubit.dart';
+import 'package:radioapps/src/ui/components/widget_extensions.dart';
 import 'package:radioapps/src/ui/play/common.dart';
 
 class AudioPlayerView extends StatefulWidget {
@@ -28,7 +30,7 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
   void _updateState( AppState state ) {
     final audioState = context.read<AudioCubit>();
 
-    audioState.updateStream(state.streamUri, state.streamTitle);
+    audioState.updateStream(state.streamUri, state.streamTitle, state.appLogo);
 
   }
 
@@ -62,21 +64,32 @@ class AudioPlayerViewState extends State<AudioPlayerView> {
               
               ControlButtons(audioCubit.player),
               const SizedBox(height: 8.0),
-              StreamBuilder(stream: player.icyMetadataStream, 
-                builder: (context,snapshot) {
-                    final metadata = snapshot.data;
-                    final title = metadata?.info?.title ?? '';
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(title,
-                              style: Theme.of(context).textTheme.titleSmall),
-                        ),
-                      ],
-                    );
-
-                    } )
+              StreamBuilder<PlayerState>(
+                stream: player.playerStateStream,
+                builder: (context, playerState) {
+                  return StreamBuilder(stream: player.icyMetadataStream, 
+                    builder: (context,snapshot) {
+                        final metadata = snapshot.data;
+                        if(playerState.data?.playing ?? false) {
+                          final title = metadata?.info?.title ?? '';
+                          return Column(
+                            children: [
+                              Text(localisations.audioPlayingNow, style: Theme.of(context).textTheme.labelMedium),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(title,
+                                    style: Theme.of(context).textTheme.titleSmall),
+                              ),
+                            ],
+                          );
+                  
+                        } else {
+                          return const Text("");
+                        }
+                  
+                        } );
+                }
+              )
             ],
     );
   }
@@ -133,7 +146,7 @@ class ControlButtons extends StatelessWidget {
           onPressed: () {
             showSliderDialog(
               context: context,
-              title: "Adjust volume",
+              title: localisations(context).audioAdjustVolume,
               value: player.volume,
               divisions: 10,
               min: 0.0,

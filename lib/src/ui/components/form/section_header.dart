@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
-    super.key, required this.title, this.trailing, this.color, this.titleStyle
+    super.key, required this.title, this.trailing, this.color, this.titleStyle, this.height
   });
 
   final String title;
   final Widget? trailing;
   final Color ?color;
   final TextStyle ?titleStyle;
+  final double ?height;  
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class SectionHeader extends StatelessWidget {
 
     return Container(
       color: color ?? theme.colorScheme.primary,
-      
+      height: height,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: [

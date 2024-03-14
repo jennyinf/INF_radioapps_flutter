@@ -79,8 +79,7 @@ enum ContactType {
 
     } catch (e) {
         if(context.mounted) {
-          MessageDisplay.showErrorInSnackBar(context, this.failedMessage(context));
-
+          MessageDisplay.showErrorInSnackBar(context, failedMessage(context));
         }
 
     }

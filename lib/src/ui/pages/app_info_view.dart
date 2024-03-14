@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:radioapps/src/bloc/app_state.dart';
+import 'package:radioapps/src/bloc/app_state_cubit.dart';
 import 'package:radioapps/src/ui/components/contact_button.dart';
 import 'package:radioapps/src/ui/components/cubit_state.dart';
 import 'package:radioapps/src/ui/components/form/section_header.dart';

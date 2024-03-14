@@ -4,7 +4,7 @@ description: "Radioapps Project"
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 3.0.0+30002
+version: 3.0.0+30003
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -52,6 +52,9 @@ dependencies:
   # # used to query the audio library to select a song
   on_audio_query: ^2.9.0
   # screenshot: ^2.1.0
+
+  # used to provide paths to file resources
+  path_provider: ^2.1.2
 
 dev_dependencies:
 

@@ -63,4 +63,7 @@ class StationInfo {
       // Add other properties as needed
     };
   }
+
+  String get newsFeed => facebookPage.isNotEmpty ? facebookPage : twitterURL;
+  bool get hasNewsFeed => facebookPage.isNotEmpty || twitterURL.isNotEmpty;
 }

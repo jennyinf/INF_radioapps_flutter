@@ -38,12 +38,12 @@ class AudioCubit extends Cubit<AudioState> {
     // Listen to errors during playback.
     _player.playbackEventStream.listen((event) {},
         onError: (Object e, StackTrace stackTrace) {
-      print('A stream error occurred: $e');
+      // print('A stream error occurred: $e');
     });
 
   }
 
-  void updateStream(String stream, String title) async {
+  void updateStream(String stream, String title, Uri ?logoPath) async {
     if( stream != state.streamUri ) {
       // update the stream
       emit(state.copyWith(streamUri: stream, title: title));
@@ -52,7 +52,11 @@ class AudioCubit extends Cubit<AudioState> {
         // stop playing
       } else {
         final source = AudioSource.uri(Uri.parse(stream), 
-          tag: MediaItem(id: '1', title: title));
+          tag: MediaItem(
+            id: '1', 
+            title: title, 
+            album: 'Playing your local Radio Station',
+            artUri: logoPath));
 
         try {
           await _player.setAudioSource(source);
